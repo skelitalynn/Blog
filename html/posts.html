@@ -1,0 +1,232 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Posts | Personal Blog Preview</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --text: #1a1a1a;
+        --muted: #6b6b6b;
+        --line: #e7e7e7;
+        --link: #111111;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #151515;
+          --text: #f2f2f2;
+          --muted: #a5a5a5;
+          --line: #2a2a2a;
+          --link: #ffffff;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Inter", "SF Pro Text", "Segoe UI", sans-serif;
+        line-height: 1.65;
+      }
+      .container {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 18px 22px 72px;
+      }
+      .top-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+      }
+      .brand {
+        font-weight: 650;
+        letter-spacing: -0.01em;
+      }
+      .menu {
+        display: flex;
+        gap: 16px;
+        color: var(--muted);
+      }
+      .menu a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .menu a:hover,
+      .menu a[aria-current="page"] {
+        color: var(--text);
+      }
+      .divider {
+        border-top: 1px solid var(--line);
+        margin: 14px 0 22px;
+      }
+      h1 {
+        margin: 0 0 16px;
+        font-size: 32px;
+        letter-spacing: -0.02em;
+      }
+      .tag-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: -4px 0 16px;
+      }
+      .tag-btn {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: transparent;
+        color: var(--muted);
+        padding: 6px 10px;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .tag-btn.active {
+        background: var(--text);
+        color: var(--bg);
+        border-color: var(--text);
+      }
+      .post-item {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px;
+        margin-bottom: 12px;
+      }
+      .post-item h2 {
+        margin: 0 0 6px;
+        font-size: 22px;
+        letter-spacing: -0.015em;
+      }
+      .post-item h2 a {
+        color: var(--text);
+        text-decoration: none;
+      }
+      .post-item h2 a:hover {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .post-meta {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+      .post-item p {
+        margin: 0;
+        color: var(--muted);
+      }
+      .foot {
+        border-top: 1px solid var(--line);
+        margin-top: 28px;
+        padding-top: 14px;
+        font-size: 14px;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <header class="top-nav">
+        <div class="brand">Apple's Blog</div>
+        <nav class="menu">
+          <a href="posts.html" aria-current="page">Posts</a>
+          <a href="preview.html">About</a>
+          <a href="search.html">Search</a>
+        </nav>
+      </header>
+      <div class="divider"></div>
+
+      <h1>Posts</h1>
+      <div id="tagFilters" class="tag-filters"></div>
+      <section id="postList"></section>
+
+      <footer class="foot">这是你的文章列表页原型。</footer>
+    </main>
+    <script>
+      const posts = [
+        {
+          title: "Building a Writing-First Blog",
+          date: "2026-02-17",
+          summary: "我如何把个人博客做成长期可维护的工程项目，而不是一次性展示页。",
+          tags: ["Frontend", "Design System"],
+          href: "post-writing-first-blog.html",
+        },
+        {
+          title: "From Backend to Frontend",
+          date: "2026-02-15",
+          summary: "用真实项目学习前端的路径：每天有可见成果，持续迭代视觉与代码结构。",
+          tags: ["Learning Log", "Frontend"],
+          href: "post-backend-to-frontend.html",
+        },
+        {
+          title: "Minimal UI Notes",
+          date: "2026-02-10",
+          summary: "关于留白、文字层级和低饱和灰阶配色的实战经验。",
+          tags: ["UI/UX", "Design System"],
+          href: "post-minimal-ui-notes.html",
+        },
+      ];
+
+      const tagFiltersEl = document.getElementById("tagFilters");
+      const postListEl = document.getElementById("postList");
+      let activeTag = "全部";
+
+      function getTagStats() {
+        const map = new Map();
+        for (const post of posts) {
+          for (const tag of post.tags) {
+            map.set(tag, (map.get(tag) || 0) + 1);
+          }
+        }
+        return [...map.entries()]
+          .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+          .map(([name, count]) => ({ name, count }));
+      }
+
+      function renderTagFilters() {
+        const stats = getTagStats();
+        const allCount = posts.length;
+        const tags = [{ name: "全部", count: allCount }, ...stats];
+
+        tagFiltersEl.innerHTML = tags
+          .map(
+            (tag) =>
+              `<button class="tag-btn ${activeTag === tag.name ? "active" : ""}" data-tag="${tag.name}">${tag.name} (${tag.count})</button>`,
+          )
+          .join("");
+
+        for (const btn of tagFiltersEl.querySelectorAll(".tag-btn")) {
+          btn.addEventListener("click", () => {
+            activeTag = btn.dataset.tag;
+            renderTagFilters();
+            renderPosts();
+          });
+        }
+      }
+
+      function renderPosts() {
+        const filtered =
+          activeTag === "全部"
+            ? posts
+            : posts.filter((post) => post.tags.includes(activeTag));
+
+        postListEl.innerHTML = filtered
+          .map(
+            (post) => `
+              <article class="post-item">
+                <h2><a href="${post.href}">${post.title}</a></h2>
+                <div class="post-meta">${post.date} · ${post.tags.join(" · ")}</div>
+                <p>${post.summary}</p>
+              </article>
+            `,
+          )
+          .join("");
+      }
+
+      renderTagFilters();
+      renderPosts();
+    </script>
+  </body>
+</html>
+
