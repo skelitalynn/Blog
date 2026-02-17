@@ -1,19 +1,22 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
+import { isDraftModeEnabled } from "@/lib/safe-draft-mode";
 import Image from "next/image";
-import Link from "next/link";
 
 import { siteConfig } from "@/config/site";
 import { getSiteSettings } from "@/sanity/lib/api";
 
 export const metadata: Metadata = {
-  title: "About",
+  title: "About Me",
   description: "About the author and design philosophy.",
 };
 
 export default async function AboutPage() {
-  const settings = await getSiteSettings();
+  const settings = await getSiteSettings(isDraftModeEnabled());
+  const githubUsername = process.env.NEXT_PUBLIC_GITHUB_USERNAME ?? "octocat";
+
   const aboutIntro =
     settings.aboutIntro ?? "深度专注产品与前端体验，喜欢把复杂问题做成简单页面。";
+
   const aboutParagraphs = settings.aboutParagraphs ?? [
     "我目前在做一个写作优先的个人博客系统，目标是极简、耐看、可长期维护。",
     "过去更多是后端视角，现在正在系统补齐前端能力，从视觉到工程都亲手打磨。",
@@ -26,7 +29,7 @@ export default async function AboutPage() {
 
       <section className="mb-4 flex items-center gap-4">
         <Image
-          src="https://i.pravatar.cc/160?img=12"
+          src="/avatar.png"
           alt="头像"
           width={150}
           height={150}
@@ -45,10 +48,11 @@ export default async function AboutPage() {
         <h2 className="mb-3 text-[22px] tracking-[-0.015em]">GitHub Activity</h2>
         <div className="mb-3 rounded-[14px] border border-line p-3">
           <Image
-            src="https://ghchart.rshah.org/409ba5/torvalds"
+            src={`https://ghchart.rshah.org/409ba5/${githubUsername}`}
             alt="GitHub Contribution Graph"
             width={1200}
             height={260}
+            unoptimized
             className="w-full rounded-[10px] border border-line"
           />
         </div>
@@ -57,11 +61,14 @@ export default async function AboutPage() {
 
       <footer className="mt-7 border-t border-line pt-3 text-sm text-muted">
         <div className="flex flex-wrap gap-3">
-          <Link href={siteConfig.links.github}>GitHub</Link>
-          <Link href={siteConfig.links.x}>X</Link>
-          <Link href={siteConfig.links.email}>Email</Link>
+          <a href={siteConfig.links.github} target="_blank" rel="noreferrer">GitHub</a>
+          <a href={siteConfig.links.x} target="_blank" rel="noreferrer">X</a>
+          <a href={siteConfig.links.email}>Email</a>
         </div>
       </footer>
     </div>
   );
 }
+
+
+

@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
-import Link from "next/link";
+﻿import type { Metadata } from "next";
+import { isDraftModeEnabled } from "@/lib/safe-draft-mode";
 
 import { SearchPanel } from "@/components/search-panel";
 import { siteConfig } from "@/config/site";
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default function SearchPage() {
-  const postsPromise = getAllPosts();
+  const postsPromise = getAllPosts(isDraftModeEnabled());
   return <SearchPageContent postsPromise={postsPromise} />;
 }
 
@@ -34,12 +34,15 @@ async function SearchPageContent({
 
       <div className="mt-[22px] border-t border-line pt-3 text-sm text-muted">
         <div className="flex flex-wrap gap-3">
-          <Link href={siteConfig.links.github}>GitHub</Link>
-          <Link href={siteConfig.links.x}>X</Link>
-          <Link href={siteConfig.links.email}>Email</Link>
-          <Link href={siteConfig.links.rss}>RSS</Link>
+          <a href={siteConfig.links.github} target="_blank" rel="noreferrer">GitHub</a>
+          <a href={siteConfig.links.x} target="_blank" rel="noreferrer">X</a>
+          <a href={siteConfig.links.email}>Email</a>
+          <a href={siteConfig.links.rss}>RSS</a>
         </div>
       </div>
     </div>
   );
 }
+
+
+

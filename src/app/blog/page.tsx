@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
+import { isDraftModeEnabled } from "@/lib/safe-draft-mode";
 
 import { BlogList } from "@/components/blog-list";
 import { getAllPosts } from "@/sanity/lib/api";
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default function BlogPage() {
-  const postsPromise = getAllPosts();
+  const postsPromise = getAllPosts(isDraftModeEnabled());
 
   return <BlogPageContent postsPromise={postsPromise} />;
 }
@@ -23,8 +24,16 @@ async function BlogPageContent({
 
   return (
     <div className="pb-10 pt-5">
-      <h1 className="mb-4 text-[32px] tracking-[-0.02em]">Posts</h1>
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <h1 className="text-[32px] tracking-[-0.02em]">Posts</h1>
+        <a
+          href="/studio/desk/post;create"
+          className="rounded-lg border border-line px-3 py-1.5 text-sm text-muted hover:text-text"
+        >
+          鍐欐枃绔?        </a>
+      </div>
       <BlogList posts={posts} />
     </div>
   );
 }
+

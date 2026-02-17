@@ -1,7 +1,5 @@
 import "server-only";
 
-import { draftMode } from "next/headers";
-
 import { blogPosts, siteConfig } from "@/config/site";
 import { hasSanityEnv } from "@/sanity/env";
 
@@ -35,8 +33,7 @@ const fallbackSettings: SiteSettings = {
   ],
 };
 
-function getQueryOptions() {
-  const isPreview = draftMode().isEnabled;
+function getQueryOptions(isPreview: boolean) {
   return {
     perspective: isPreview ? ("previewDrafts" as const) : ("published" as const),
     useCdn: !isPreview,
@@ -45,14 +42,14 @@ function getQueryOptions() {
   };
 }
 
-export async function getAllPosts(): Promise<SanityPost[]> {
+export async function getAllPosts(isPreview = false): Promise<SanityPost[]> {
   if (!hasSanityEnv) return fallbackPosts;
   const sanityClient = getSanityClient();
-  const posts = await sanityClient.fetch<SanityPost[]>(postsQuery, {}, getQueryOptions());
-  return posts?.length ? posts : fallbackPosts;
+  const posts = await sanityClient.fetch<SanityPost[]>(postsQuery, {}, getQueryOptions(isPreview));
+  return posts ?? [];
 }
 
-export async function getPostBySlug(slug: string): Promise<SanityPost | null> {
+export async function getPostBySlug(slug: string, isPreview = false): Promise<SanityPost | null> {
   if (!hasSanityEnv) {
     return fallbackPosts.find((post) => post.slug === slug) ?? null;
   }
@@ -60,24 +57,24 @@ export async function getPostBySlug(slug: string): Promise<SanityPost | null> {
   const post = await sanityClient.fetch<SanityPost | null>(
     postBySlugQuery,
     { slug },
-    getQueryOptions(),
+    getQueryOptions(isPreview),
   );
   return post;
 }
 
-export async function getAllPostSlugs(): Promise<string[]> {
+export async function getAllPostSlugs(isPreview = false): Promise<string[]> {
   if (!hasSanityEnv) return fallbackPosts.map((post) => post.slug);
   const sanityClient = getSanityClient();
-  return sanityClient.fetch<string[]>(postSlugsQuery, {}, getQueryOptions());
+  return sanityClient.fetch<string[]>(postSlugsQuery, {}, getQueryOptions(isPreview));
 }
 
-export async function getSiteSettings(): Promise<SiteSettings> {
+export async function getSiteSettings(isPreview = false): Promise<SiteSettings> {
   if (!hasSanityEnv) return fallbackSettings;
   const sanityClient = getSanityClient();
   const settings = await sanityClient.fetch<SiteSettings | null>(
     siteSettingsQuery,
     {},
-    getQueryOptions(),
+    getQueryOptions(isPreview),
   );
   return settings ?? fallbackSettings;
 }

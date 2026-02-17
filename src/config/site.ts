@@ -4,10 +4,11 @@ export const siteConfig = {
   description:
     "A minimal personal website with writing-first posts and clean, readable design.",
   links: {
-    github: "#",
-    x: "#",
-    email: "mailto:hi@example.com",
+    github: "https://github.com/skelitalynn",
+    x: "https://x.com/LynnSkelita",
+    email: "skelitalynn@gmail.com",
     rss: "/rss.xml",
+
   },
   nav: [
     { href: "/blog", label: "Posts" },

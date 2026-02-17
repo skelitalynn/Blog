@@ -1,8 +1,9 @@
-import { PortableText } from "@portabletext/react";
+﻿import { PortableText } from "@portabletext/react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { isDraftModeEnabled } from "@/lib/safe-draft-mode";
 import { getAllPostSlugs, getAllPosts, getPostBySlug } from "@/sanity/lib/api";
 
 type BlogArticlePageProps = {
@@ -10,14 +11,14 @@ type BlogArticlePageProps = {
 };
 
 export async function generateStaticParams() {
-  const slugs = await getAllPostSlugs();
+  const slugs = await getAllPostSlugs(false);
   return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
   params,
 }: BlogArticlePageProps): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug);
+  const post = await getPostBySlug(params.slug, false);
   if (!post) return { title: "Post not found" };
 
   return {
@@ -31,10 +32,11 @@ function isStringArray(value: unknown): value is string[] {
 }
 
 export default async function BlogArticlePage({ params }: BlogArticlePageProps) {
-  const post = await getPostBySlug(params.slug);
+  const isPreview = isDraftModeEnabled();
+  const post = await getPostBySlug(params.slug, isPreview);
   if (!post) notFound();
 
-  const allPosts = await getAllPosts();
+  const allPosts = await getAllPosts(isPreview);
   const index = allPosts.findIndex((item) => item.slug === params.slug);
   const prev = index > 0 ? allPosts[index - 1] : null;
   const next = index < allPosts.length - 1 ? allPosts[index + 1] : null;
