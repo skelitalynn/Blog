@@ -6,7 +6,7 @@ import { siteConfig } from "@/config/site";
 import { getSiteSettings } from "@/sanity/lib/api";
 
 export const metadata: Metadata = {
-  title: "About Me",
+  title: "Apple",
   description: "About the author and design philosophy.",
 };
 
@@ -25,7 +25,7 @@ export default async function AboutPage() {
 
   return (
     <div className="pb-10 pt-5">
-      <h1 className="mb-4 text-[32px] tracking-[-0.02em]">About</h1>
+      <h1 className="mb-4 text-[32px] tracking-[-0.02em]">Apple</h1>
 
       <section className="mb-4 flex items-center gap-4">
         <Image
@@ -47,12 +47,12 @@ export default async function AboutPage() {
       <section className="mt-7">
         <h2 className="mb-3 text-[22px] tracking-[-0.015em]">GitHub Activity</h2>
         <div className="mb-3 rounded-[14px] border border-line p-3">
-          <Image
-            src={`https://ghchart.rshah.org/409ba5/${githubUsername}`}
+          <img
+            src={`https://ghchart.rshah.org/${githubUsername}`}
             alt="GitHub Contribution Graph"
             width={1200}
             height={260}
-            unoptimized
+            loading="lazy"
             className="w-full rounded-[10px] border border-line"
           />
         </div>
@@ -68,6 +68,5 @@ export default async function AboutPage() {
     </div>
   );
 }
-
 
 
