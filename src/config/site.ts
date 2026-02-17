@@ -1,18 +1,18 @@
 export const siteConfig = {
-  name: "Your Name",
+  name: "Apple's Blog",
   title: "Personal Blog",
   description:
     "A minimal personal website with writing-first posts and clean, readable design.",
   links: {
     github: "https://github.com/skelitalynn",
     x: "https://x.com/LynnSkelita",
-    email: "skelitalynn@gmail.com",
+    email: "mailto:skelitalynn@gmail.com",
     rss: "/rss.xml",
 
   },
   nav: [
-    { href: "/blog", label: "Posts" },
     { href: "/about", label: "About" },
+    { href: "/blog", label: "Posts" },
     { href: "/search", label: "Search" },
   ],
 } as const;

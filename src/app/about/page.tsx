@@ -15,12 +15,12 @@ export default async function AboutPage() {
   const githubUsername = process.env.NEXT_PUBLIC_GITHUB_USERNAME ?? "octocat";
 
   const aboutIntro =
-    settings.aboutIntro ?? "深度专注产品与前端体验，喜欢把复杂问题做成简单页面。";
+    settings.aboutIntro ?? "CS | AI | Web3 | Full-Stack Dev | INTJ | Metaphysics Enthusiast";
 
   const aboutParagraphs = settings.aboutParagraphs ?? [
-    "我目前在做一个写作优先的个人博客系统，目标是极简、耐看、可长期维护。",
-    "过去更多是后端视角，现在正在系统补齐前端能力，从视觉到工程都亲手打磨。",
-    "平时在北京和线上协作空间之间切换，也欢迎交流设计系统与个人产品。",
+    "Computer Science student building AI agent systems and Web3 applications.",
+    "Focused on architecture, AI Agent, and scalable full-stack products. ",
+    "Aspiring to design reliable AI systems with clarity, depth, and disciplined execution.",
   ];
 
   return (
@@ -56,7 +56,6 @@ export default async function AboutPage() {
             className="w-full rounded-[10px] border border-line"
           />
         </div>
-        <p className="text-muted">我偏好把可复用的东西开源出来，边做边记录，保持持续迭代。</p>
       </section>
 
       <footer className="mt-7 border-t border-line pt-3 text-sm text-muted">
